@@ -25,7 +25,7 @@ public class ScreenController {
     public ResponseEntity<Screen> getScreenById(@PathVariable Long ScreenId){
         return ResponseEntity.ok(screenService.getScreenById(ScreenId));
     }
-    @GetMapping("/{theaterid}")
+    @GetMapping("/theater/{theaterid}")
     public ResponseEntity<List<Screen>> getScreenByTheaterId(@PathVariable Long theaterid){
         return ResponseEntity.ok(screenService.getScreenByTheaterId(theaterid));
     }//Ek theater me bahot saare rooms hote hai ✔️

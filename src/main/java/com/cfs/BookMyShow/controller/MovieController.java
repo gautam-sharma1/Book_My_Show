@@ -27,15 +27,15 @@ public class MovieController {
         return ResponseEntity.ok(movieService.getallmovies());
     }
 
-    @GetMapping("/{Language}")
+    @GetMapping("/language/{Language}")
     public ResponseEntity<List<Movie>>  getMovieByLanguage(@PathVariable String Language){
      return ResponseEntity.ok(movieService.getMovieByLanguage(Language));
     }
-    @GetMapping("{MovieBytitleCase}")
+    @GetMapping("/search/{MovieBytitleCase}")
     public ResponseEntity<List<Movie>> getMovieBytitleCase(@PathVariable String MovieBytitleCase){
       return ResponseEntity.ok(movieService.getMovieBytitleCase(MovieBytitleCase));
     }
-    @GetMapping("/{genre}")
+    @GetMapping("/genre/{genre}")
     public ResponseEntity<List<Movie>> findByGenre(@PathVariable String genre){
         return ResponseEntity.ok(movieService.findByGenre(genre));
     }

@@ -2,6 +2,7 @@ package com.cfs.BookMyShow.service;
 
 import com.cfs.BookMyShow.entity.Movie;
 import com.cfs.BookMyShow.repository.MovieRepository;
+import com.cfs.BookMyShow.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,8 @@ public class MovieService {
         return movieRepository.findAll();
     }
     public Movie getMovieById(Long Id){
-       return movieRepository.findById(Id).orElseThrow(()-> new RuntimeException("movie not found by id"+Id));
+       // OLDER CODE: return movieRepository.findById(Id).orElseThrow(()-> new RuntimeException("movie not found by id"+Id));
+       return movieRepository.findById(Id).orElseThrow(()-> new ResourceNotFoundException("movie not found by id"+Id)); // NEW: answers 404 Not Found
 
     }
 
@@ -33,7 +35,8 @@ public class MovieService {
         return movieRepository.findByGenre(Genre);
     }
     public Movie updateMovie(Long MovieId,Movie movie){
-       Movie ExistingMovie= movieRepository.findById(MovieId).orElseThrow(()->new RuntimeException("movie not found by id"+MovieId));
+       // OLDER CODE: Movie ExistingMovie= movieRepository.findById(MovieId).orElseThrow(()->new RuntimeException("movie not found by id"+MovieId));
+       Movie ExistingMovie= movieRepository.findById(MovieId).orElseThrow(()->new ResourceNotFoundException("movie not found by id"+MovieId)); // NEW: answers 404 Not Found
         ExistingMovie.setGenre(movie.getGenre());
         ExistingMovie.setDescription(movie.getDescription());
         ExistingMovie.setLanguage(movie.getLanguage());
@@ -47,7 +50,8 @@ public class MovieService {
     }
 
     public String deleteMovie(Long MovieId ){
-        Movie movie= movieRepository.findById(MovieId).orElseThrow(() -> new RuntimeException("movie not found by id " + MovieId));
+        // OLDER CODE: Movie movie= movieRepository.findById(MovieId).orElseThrow(() -> new RuntimeException("movie not found by id " + MovieId));
+        Movie movie= movieRepository.findById(MovieId).orElseThrow(() -> new ResourceNotFoundException("movie not found by id " + MovieId)); // NEW: answers 404 Not Found
          movieRepository.delete(movie);
          return "deleted movie Successfully";
 

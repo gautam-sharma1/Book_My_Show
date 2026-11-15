@@ -23,6 +23,6 @@ public class Movie {
     private Integer durationMinutes;
     private String rating;
     private LocalDate releaseDate;
-    private String PosterUrl;
+    private String posterUrl;
 
 }

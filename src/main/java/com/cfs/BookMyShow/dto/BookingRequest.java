@@ -1,5 +1,7 @@
 package com.cfs.BookMyShow.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +15,29 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingRequest { // see in dto of bookingrequestion we not take all the stuff of entity we just take here the the method we have created in  the repository of Booking
-   private  Long userId;
+
+   // OLDER CODE (the client told us WHO was booking). Kept for reference:
+   // private  Long userId;
+   //
+   // WHY userId WAS REMOVED - this is the most important security fix in the project.
+   // The old request looked like:  {"userId": 5, "showId": 1, "seatIds": [10,11]}
+   // and the server simply believed that 5. So any logged-in person could change that
+   // number to somebody else's id and book tickets charged to THEIR account.
+   //
+   // Now the identity comes from the JWT instead: BookingService reads the email out
+   // of the token and looks the user up. A token cannot be forged, so nobody can
+   // pretend to be someone else.
+   //
+   // The rule to remember: the client says what it wants to DO; the token says WHO
+   // is asking. Never let the client declare its own identity.
+
+   @NotNull(message = "showId is required")
    private  Long showId;
+
+   // @NotEmpty on a List means "the list must exist AND contain at least one item".
+   // Without it, booking with "seatIds": [] used to succeed and create an empty
+   // booking with a total price of 0.
+   @NotEmpty(message = "you must select at least one seat")
    private  List<Long> seatIds;
 }
 //Include only required fields

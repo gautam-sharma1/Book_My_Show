@@ -1,5 +1,6 @@
 package com.cfs.BookMyShow.controller;
 
+import jakarta.validation.Valid;
 import com.cfs.BookMyShow.dto.TheaterRequest;
 import com.cfs.BookMyShow.entity.Theater;
 import com.cfs.BookMyShow.service.TheaterService;
@@ -16,7 +17,7 @@ public class TheaterController {
     private final TheaterService theaterService;
 
     @PostMapping("/theater")
-    public ResponseEntity<Theater> addTheater(@RequestBody TheaterRequest request){
+    public ResponseEntity<Theater> addTheater(@Valid @RequestBody TheaterRequest request){
         return ResponseEntity.ok(theaterService.addTheater(request));
     }
     @GetMapping
@@ -27,7 +28,7 @@ public class TheaterController {
     public ResponseEntity<Theater> getTheaterbyId(@PathVariable Long theaterId){
         return  ResponseEntity.ok(theaterService.gettheaterByid(theaterId));
     }
-    @GetMapping("/{CityId}")
+    @GetMapping("/city/{CityId}")
     public ResponseEntity<List<Theater>> getTheaterByCity( @PathVariable Long CityId){
         return  ResponseEntity.ok(theaterService.getTheaterByCity(CityId));
     }

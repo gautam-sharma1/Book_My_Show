@@ -1,11 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
+		<!-- OLDER CODE (Spring Boot 4.0.3 -> pulled Spring Security 7, which almost no
+		     tutorial covers yet). Kept for reference:
 		<version>4.0.3</version>
+		-->
+		<!-- Boot 3.5.16 manages Spring Security 6.5.11 - the version every JWT tutorial
+		     and StackOverflow answer is written for. -->
+		<version>3.5.16</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.cfs</groupId>
@@ -34,9 +40,68 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+		<!-- OLDER CODE (Boot 4 renamed this starter to 'webmvc'; the artifact does not
+		     exist in Boot 3.5). Kept for reference:
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
+		</dependency>
+		-->
+		<!-- VALIDATION: gives us @NotBlank, @Email, @Size, @Positive etc. plus the
+		     @Valid annotation that tells Spring to actually CHECK them.
+		     Without this jar the annotations compile fine but are silently ignored -
+		     a classic trap: your validation "works" in the IDE and does nothing at runtime. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<!-- SWAGGER / OpenAPI: reads your controllers at startup and generates a live,
+		     clickable API documentation page at  http://localhost:8080/swagger-ui.html
+		     Nothing to write by hand - it finds the endpoints, the request bodies and
+		     the response types from the code itself. -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.8.17</version>
+		</dependency>
+
+		<!-- SPRING SECURITY: brings in the filter chain, BCryptPasswordEncoder,
+		     UserDetailsService, @PreAuthorize and the authentication manager.
+		     The moment this jar is on the classpath, EVERY endpoint becomes protected
+		     by default - that is why SecurityConfig must say what is public. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<!-- JJWT = Java JWT library, split into 3 jars on purpose:
+		     jjwt-api     -> the interfaces we write code against (compile time)
+		     jjwt-impl    -> the actual implementation (runtime only, hidden from our code)
+		     jjwt-jackson -> lets JJWT turn the token's claims into/out of JSON
+		     Spring Boot does not manage JJWT's version, so we state 0.12.6 ourselves. -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.12.6</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Spring MVC + embedded Tomcat + Jackson. The Boot 3 name for the web starter. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
 		<dependency>
@@ -55,6 +120,8 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!-- OLDER CODE (Boot 4 split testing into per-slice starters. Neither artifact
+		     exists in Boot 3.5, where one starter covers everything). Kept for reference:
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
@@ -63,6 +130,31 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		-->
+		<!-- One test starter: JUnit 5 + Mockito + AssertJ + MockMvc, all together. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Gives tests helpers like @WithMockUser and SecurityMockMvcRequestPostProcessors,
+		     so we can pretend to be a logged-in USER or ADMIN without making a real token. -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- H2 = a tiny database that lives in memory and disappears when the test ends.
+		     scope=test means it is ONLY on the classpath while testing - the real app
+		     still uses MySQL. This is what lets the tests run on any machine with no
+		     database installed or configured. -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
     </dependencies>
@@ -97,3 +189,7 @@
 	</build>
 
 </project>
+
+
+
+

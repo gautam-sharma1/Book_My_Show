@@ -3,6 +3,7 @@ package com.cfs.BookMyShow.service;
 import com.cfs.BookMyShow.dto.CityRequest;
 import com.cfs.BookMyShow.entity.City;
 import com.cfs.BookMyShow.repository.CityRepository;
+import com.cfs.BookMyShow.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +67,8 @@ public class CityService { // Note always when using @RequiredArgsConstructor th
 
     // public CityRequest getCityById(Long id){
     public City getCityById(Long id){
-        City city = cityRepository.findById(id).orElseThrow(()-> new RuntimeException("city not found by id"+id));
+        // OLDER CODE: City city = cityRepository.findById(id).orElseThrow(()-> new RuntimeException("city not found by id"+id));
+        City city = cityRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("city not found by id"+id)); // NEW: answers 404 Not Found
            //if not using builder
         // CityRequest cityreq = new CityRequest();
          //cityreq.setState(city.getState());

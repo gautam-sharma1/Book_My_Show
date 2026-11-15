@@ -1,5 +1,6 @@
 package com.cfs.BookMyShow.controller;
 
+import jakarta.validation.Valid;
 import com.cfs.BookMyShow.dto.CityRequest;
 import com.cfs.BookMyShow.entity.City;
 import com.cfs.BookMyShow.service.CityService;
@@ -15,7 +16,7 @@ import java.util.List;
 public class cityController {
     private final CityService cityService;
     @PostMapping("/add")
-    public ResponseEntity<City> addcity(@RequestBody CityRequest cityRequest){
+    public ResponseEntity<City> addcity(@Valid @RequestBody CityRequest cityRequest){
         return ResponseEntity.ok(cityService.addCity(cityRequest));
     }
     @GetMapping

@@ -1,5 +1,6 @@
 package com.cfs.BookMyShow.controller;
 
+import jakarta.validation.Valid;
 import com.cfs.BookMyShow.dto.ShowRequest;
 import com.cfs.BookMyShow.entity.Show;
 import com.cfs.BookMyShow.repository.ShowRepository;
@@ -19,7 +20,7 @@ public class ShowController {
 private final ShowService showService;
 
 @PostMapping("/show")
-public ResponseEntity<Show> addShow(@RequestBody ShowRequest show){
+public ResponseEntity<Show> addShow(@Valid @RequestBody ShowRequest show){
     return ResponseEntity.ok(showService.addShow(show));
 }
 
@@ -28,21 +29,21 @@ public ResponseEntity<Show> addShow(@RequestBody ShowRequest show){
     return ResponseEntity.ok(showService.getAllShow());
 
 }
-@GetMapping("/{MovieId}")
+@GetMapping("/movie/{MovieId}")
    public ResponseEntity<List<Show>> getShowByMovieId(@PathVariable Long MovieId){
     return ResponseEntity.ok(showService.getShowByMovieId(MovieId));
     }
-    @GetMapping("/{movieId}/date")//date is for that this api contain date also  and it allowed that after dynamic binfing of movie id we can pass another word also like we have done date
+    @GetMapping("/movie/{movieId}/date")//date is for that this api contain date also  and it allowed that after dynamic binfing of movie id we can pass another word also like we have done date
     public ResponseEntity<List<Show>> getShowByMovieIdAndDate(@PathVariable Long movieId ,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){//DateTimeFormat is because to convert date into yyy-mm-dd and LocalDate is for java to understand and datetime formater is because we pass in date in url in form or yyyy-mm-dd  because we are human and we pass in that format and datetimeformat is also because  we haev to save thing in db in yyyy-mm-dd which user can understand nahi to java ,springboot khudse koi bhi format ka date insert kardega
       return ResponseEntity.ok(showService.getShowByMovieIdAndDate(movieId,date));
     }
-    @GetMapping("/{screenId}")
+    @GetMapping("/screen/{screenId}")
    public ResponseEntity<List<Show>> getShowByScreenId(@PathVariable Long screenId){
  return ResponseEntity.ok(showService.getShowByScreenId(screenId));
     }//Screen 1 (one room)
 //    It doesn’t run just one show ❌
 //    It runs many shows throughout the day
-@GetMapping("/{ScreenId}")
+@GetMapping("/screen/{ScreenId}/date")
     public ResponseEntity<List<Show>> findByScreenIdAndShowDate(@PathVariable Long ScreenId,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date ){
             return ResponseEntity.ok(showService.findByScreenIdAndShowDate(ScreenId,date));
     }
