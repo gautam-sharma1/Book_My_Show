@@ -120,11 +120,13 @@ public class GlobalExceptionHandler {
     // in the project, which is why every error used to come back as 400 regardless of
     // what actually went wrong. Kept as the fallback for any plain RuntimeException that
     // doesn't match one of the specific types above.
+                                                                                                                          
+                                                                                                                     
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String,Object>> handleRuntimeException(RuntimeException e){
-    Map<String,Object> error = new HashMap<>();                                                                         // so ham use denge n ki error mae kya hua hai
-    error.put("timestamp", LocalDateTime.now());                                                                       // toh use ham batayenge ki error kab ayi hai
-    error.put("message", e.getMessage());                                                                             // jo message ham wahan se bhejenge na woh yahan automatically ajayegi  kahan se throw new RuntimeException("fdghbgkf....") this message
+    Map<String,Object> error = new HashMap<>();                                                                        
+    error.put("timestamp", LocalDateTime.now());                                                                      
+    error.put("message", e.getMessage());                                                                           
     error.put("status", HttpStatus.BAD_REQUEST.value());                                                                     // ab us sense mae ham ek status code bhej denge
     return ResponseEntity.badRequest().body(error);                                                                       // ab ku ki method  ka return type ResponseEntity hai toh yeh line se ham pura metho bhej denge like  msg,timestamp,status which we have done above above
     }
