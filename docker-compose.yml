@@ -1,0 +1,46 @@
+services:
+  # ------------------------------------------------------------------
+  # MySQL - the one external service this project actually needs.
+  # ------------------------------------------------------------------
+  mysql:
+    image: mysql:8.0
+    container_name: bms-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: BMS
+      MYSQL_ROOT_PASSWORD: Password3
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    # The app must not start before MySQL is actually ready to accept
+    # connections, not just "the container exists". This healthcheck is
+    # what depends_on: condition: service_healthy below waits on.
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pPassword3"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ------------------------------------------------------------------
+  # The Spring Boot app itself, built from the Dockerfile in this folder.
+  # ------------------------------------------------------------------
+  app:
+    build: .
+    container_name: bms-app
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # Inside Docker's network, containers reach each other by service
+      # name, not "localhost" - that's why this overrides the
+      # application.properties default of jdbc:mysql://localhost:3306/BMS.
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/BMS?createDatabaseIfNotExist=true
+      DB_PASSWORD: Password3
+      JWT_SECRET: ThisIsMyBookMyShowSecretKeyForJwtSigning2026MustBeAtLeast32Chars
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql-data:

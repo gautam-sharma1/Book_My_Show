@@ -4,6 +4,7 @@ import com.cfs.BookMyShow.dto.TheaterRequest;
 import com.cfs.BookMyShow.entity.City;
 import com.cfs.BookMyShow.entity.Theater;
 import com.cfs.BookMyShow.repository.TheaterRepository;
+import com.cfs.BookMyShow.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,8 @@ public class TheaterService {
       return  theaterRepository.findAll();
     }
     public Theater gettheaterByid(Long id){
-        return theaterRepository.findById(id).orElseThrow(()-> new RuntimeException("theater not found by id"+id));
+        // OLDER CODE: return theaterRepository.findById(id).orElseThrow(()-> new RuntimeException("theater not found by id"+id));
+        return theaterRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("theater not found by id"+id)); // NEW: answers 404 Not Found
     }
 
     public List<Theater> getTheaterByCity(Long cityid){

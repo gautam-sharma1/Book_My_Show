@@ -3,6 +3,7 @@ package com.cfs.BookMyShow.service;
 import com.cfs.BookMyShow.entity.Screen;
 import com.cfs.BookMyShow.entity.Seat;
 import com.cfs.BookMyShow.repository.SeatRepository;
+import com.cfs.BookMyShow.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,8 @@ public class  SeatService {
       return seatRepository.findByScreenId(screenId);
     }
     public Seat getSeatById(Long seatId){
-     return   seatRepository.findById(seatId).orElseThrow(()-> new RuntimeException("  seat not found by id "+seatId));
+     // OLDER CODE: return   seatRepository.findById(seatId).orElseThrow(()-> new RuntimeException("  seat not found by id "+seatId));
+     return   seatRepository.findById(seatId).orElseThrow(()-> new ResourceNotFoundException("  seat not found by id "+seatId)); // NEW: answers 404 Not Found
 
     }
 }

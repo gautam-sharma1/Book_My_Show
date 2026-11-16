@@ -18,7 +18,7 @@ public class SeatController {
     public ResponseEntity<Seat> addSeats(@RequestBody Seat seat){
         return ResponseEntity.ok(seatService.addSeat(seat));
     }
-    @GetMapping("/{ScreenId}")
+    @GetMapping("/screen/{ScreenId}")
     public ResponseEntity<List<Seat>> getSeatByScreenId(@PathVariable Long ScreenId){
         return ResponseEntity.ok(seatService.getSeatByScreenId(ScreenId));
     }

@@ -5,6 +5,7 @@ import com.cfs.BookMyShow.entity.Movie;
 import com.cfs.BookMyShow.entity.Screen;
 import com.cfs.BookMyShow.entity.Show;
 import com.cfs.BookMyShow.repository.ShowRepository;
+import com.cfs.BookMyShow.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +38,13 @@ public class ShowService {
     return showRepository.findAll();
     }
     public Show getShowById(Long id){
-    return showRepository.findById(id).orElseThrow(()-> new RuntimeException(" show not found by id "+id));
+    // OLDER CODE: return showRepository.findById(id).orElseThrow(()-> new RuntimeException(" show not found by id "+id));
+    return showRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(" show not found by id "+id)); // NEW: answers 404 Not Found
+    }
+    // same as getShowById but takes a DB lock on the show row, used only while booking
+    public Show getShowByIdForUpdate(Long id){
+    // OLDER CODE: return showRepository.findByIdForUpdate(id).orElseThrow(()-> new RuntimeException(" show not found by id "+id));
+    return showRepository.findByIdForUpdate(id).orElseThrow(()-> new ResourceNotFoundException(" show not found by id "+id)); // NEW: answers 404 Not Found
     }
     public List<Show>  getShowByMovieId(Long movieId){
 return showRepository.findByMovieId(movieId);
